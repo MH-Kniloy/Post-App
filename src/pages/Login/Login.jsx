@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import google from "../../assets/google.png";
 import {  signInWithPopup, GoogleAuthProvider, getAuth } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, onValue, ref, set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const provider = new GoogleAuthProvider();
   const auth = getAuth();
   const db = getDatabase();
   const navigate = useNavigate()
+  
   const handleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -22,14 +23,16 @@ const Login = () => {
         if (auth.currentUser.emailVerified) {
           setTimeout(() => {
             navigate("/Home");
-          }, 2000);
+          }, 500);
         }
       }).then(()=>{
-        set(ref(db, "users/" + auth.currentUser.uid), {
-          username: auth.currentUser.displayName,
-          email: auth.currentUser.email,
-          profile_picture: auth.currentUser.photoURL,
-        });
+          
+          set(ref(db, "users/" + auth.currentUser.uid), {
+            username: auth.currentUser.displayName,
+            email: auth.currentUser.email,
+            profile_picture: auth.currentUser.photoURL,
+          });
+        
       })
       .catch((error) => {
         // Handle Errors here.

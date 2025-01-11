@@ -13,12 +13,13 @@ const Home = () => {
   const [bioOpenClose, setBioOpenClose] = useState(false);
   const [biodata, setBiodata] = useState([]);
   const [post, setPost]=useState("")
-
+  const [postData, setPostData]=useState([])
   const handleSubmit = () => {
-    update(ref(db, "users/" + data.uid), {
+    set(ref(db, "biodata/" + data.uid), {
       occupation: occupation,
       home_town: hometown,
       current_city: currentcity,
+      email:auth.currentUser.email
     });
     setOccupation("");
     setHometown("");
@@ -39,21 +40,34 @@ const Home = () => {
   }
 
   useEffect(() => {
-    onValue(ref(db, "users/"), (snapshot) => {
+    onValue(ref(db, "biodata/"), (snapshot) => {
       let arr = [];
 
-      snapshot.forEach((user) => {
-        if (data.email === user.val().email) {
-          arr.push(user.val());
+      snapshot.forEach((biodata) => {
+        if (data.email === biodata.val().email) {
+          arr.push(biodata.val());
         }
       });
       setBiodata(arr);
     });
   }, []);
+
+  useEffect(() => {
+    onValue(ref(db, "post/"), (snapshot) => {
+      let arr = [];
+
+      snapshot.forEach((post) => {
+        if (data.email === post.val().postedByEmail) {
+          arr.push(post.val());
+        }
+      });
+      setPostData(arr);
+    });
+  }, []);
  
   return (
     <>
-      <section className="bg-gray-950 min-h-screen relative">
+      <section className="bg-gray-950 min-h-screen relative pb-20">
         <div className="w-full h-[400px] bg-cover-photo bg-no-repeat bg-cover bg-center rounded-ee-[20px] rounded-es-[20px] relative ">
           <div className="w-[350px] h-[350px] bg-profile bg-no-repeat bg-cover bg-center rounded-full border-gray-800 border-[16px] absolute bottom-[-180px] left-[200px]">
             <img
@@ -93,16 +107,41 @@ const Home = () => {
               <FaPencil />
               Add bio
             </p>
-          <div className="mt-12">
-            <p className="text-white text-xl font-bold mb-6">Create Post</p>
-            <div className="">
-                
-            <textarea onChange={(e)=>setPost(e.target.value)}
-            value={post} className="resize-none outline-none border-none rounded-md text-xl text-gray-100 bg-gray-900 p-5 font-semibold" placeholder="Whats on your mind" cols="80" rows="5"></textarea>
-            <p onClick={handlePost} className="text-white text-xl font-bold py-2 px-4 rounded-md bg-gray-900 w-[80px] text-center cursor-pointer active:scale-[0.98]">Post</p>
+            <div className="mt-12">
+              <p className="text-white text-xl font-bold mb-6">Create Post</p>
+              <div className="">
+                <textarea
+                  onChange={(e) => setPost(e.target.value)}
+                  value={post}
+                  className="resize-none outline-none border-none rounded-md text-xl text-gray-100 bg-gray-900 p-5 font-semibold"
+                  placeholder="Whats on your mind"
+                  cols="80"
+                  rows="5"
+                ></textarea>
+                <p
+                  onClick={handlePost}
+                  className="text-white text-xl font-bold py-2 px-4 rounded-md bg-gray-900 w-[80px] text-center cursor-pointer active:scale-[0.98]"
+                >
+                  Post
+                </p>
+              </div>
             </div>
-            
-          </div>
+            {postData &&
+              postData.map((item) => (
+                <div className="mt-10 w-[940px] bg-gray-900 rounded-md p-5">
+                  <div className="flex items-center gap-3 mb-5">
+                    <img
+                      className="w-[30px] h-[30px] rounded-full"
+                      src={item.postedByPhoto}
+                      alt=""
+                    />
+                    <p className="text-white font-bold ">{item.postedByName}</p>
+                  </div>
+                  <div className="overflow-auto w-full max-h-[170px]">
+                    <p className="text-white font-medium ">{item.post}</p>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
         {bioOpenClose && (
