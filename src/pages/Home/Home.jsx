@@ -40,7 +40,7 @@ const Home = () => {
 
   return (
     <>
-      <section className="bg-gray-950 h-screen relative">
+      <section className="bg-gray-950 min-h-screen relative">
         <div className="w-full h-[400px] bg-cover-photo bg-no-repeat bg-cover bg-center rounded-ee-[20px] rounded-es-[20px] relative ">
           <div className="w-[350px] h-[350px] bg-profile bg-no-repeat bg-cover bg-center rounded-full border-gray-800 border-[16px] absolute bottom-[-180px] left-[200px]">
             <img
@@ -59,25 +59,20 @@ const Home = () => {
             <h3 className="text-gray-500 pt-3 text-xl font-bold">
               {data.email}
             </h3>
-            { biodata &&
-            biodata.map((item) => (
-               
-
+            {biodata &&
+              biodata.map((item) => (
                 <div>
+                  <p className="text-gray-500 font-bold">{item.occupation}</p>
 
-                    <p className="text-gray-500 font-bold">{item.occupation}</p>
-                    
-                    
-                    <p className="text-gray-500 font-bold"> From {item.home_town}</p>
-                    <p className="text-gray-500 font-bold">
-                      Living in {item.current_city}
-                    </p>
-                
+                  <p className="text-gray-500 font-bold">
+                    {" "}
+                    From {item.home_town}
+                  </p>
+                  <p className="text-gray-500 font-bold">
+                    Living in {item.current_city}
+                  </p>
                 </div>
-               
-                
-              
-            ))}
+              ))}
             <p
               onClick={() => setBioOpenClose(!bioOpenClose)}
               className="text-white flex gap-2 items-center text-[18px] mt-4 px-3 py-2 rounded-lg bg-gray-900 w-[140px] justify-center active:scale-[0.98] cursor-pointer"
@@ -85,6 +80,15 @@ const Home = () => {
               <FaPencil />
               Add bio
             </p>
+          <div className="mt-10">
+            <p className="text-white text-xl font-bold mb-6">Create Post</p>
+            <div className="">
+                
+            <textarea className="resize-none outline-none border-none rounded-md text-xl text-gray-100 bg-gray-900 p-5 font-semibold" cols="80" rows="5"></textarea>
+            <p className="text-white text-xl font-bold py-2 px-4 rounded-md bg-gray-900 w-[80px] text-center cursor-pointer active:scale-[0.98]">Post</p>
+            </div>
+            
+          </div>
           </div>
         </div>
         {bioOpenClose && (
