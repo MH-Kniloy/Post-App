@@ -127,21 +127,26 @@ const Home = () => {
               </div>
             </div>
             {postData &&
-              postData.map((item) => (
-                <div className="mt-10 w-[940px] bg-gray-900 rounded-md p-5">
-                  <div className="flex items-center gap-3 mb-5">
-                    <img
-                      className="w-[30px] h-[30px] rounded-full"
-                      src={item.postedByPhoto}
-                      alt=""
-                    />
-                    <p className="text-white font-bold ">{item.postedByName}</p>
+              postData
+                .slice()
+                .reverse()
+                .map((item) => (
+                  <div className="mt-10 w-[940px] bg-gray-900 rounded-md p-5">
+                    <div className="flex items-center gap-3 mb-5">
+                      <img
+                        className="w-[30px] h-[30px] rounded-full"
+                        src={item.postedByPhoto}
+                        alt=""
+                      />
+                      <p className="text-white font-bold ">
+                        {item.postedByName}
+                      </p>
+                    </div>
+                    <div className="overflow-auto w-full max-h-[170px]">
+                      <p className="text-white font-medium ">{item.post}</p>
+                    </div>
                   </div>
-                  <div className="overflow-auto w-full max-h-[170px]">
-                    <p className="text-white font-medium ">{item.post}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
           </div>
         </div>
         {bioOpenClose && (
