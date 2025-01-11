@@ -1,5 +1,5 @@
 import { getAuth } from "firebase/auth";
-import { getDatabase, onValue, ref, set, update } from "firebase/database";
+import { getDatabase, onValue, push, ref, set, update } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { FaPencil } from "react-icons/fa6";
 
@@ -12,6 +12,7 @@ const Home = () => {
   const [currentcity, setCurrentcity] = useState("");
   const [bioOpenClose, setBioOpenClose] = useState(false);
   const [biodata, setBiodata] = useState([]);
+  const [post, setPost]=useState("")
 
   const handleSubmit = () => {
     update(ref(db, "users/" + data.uid), {
@@ -24,6 +25,18 @@ const Home = () => {
     setCurrentcity("");
     setBioOpenClose(false);
   };
+  
+  const handlePost=()=>{
+    set(push(ref(db, "post/")),{
+       postedByEmail:auth.currentUser.email,
+       postedByName:auth.currentUser.displayName,
+       postedByPhoto:auth.currentUser.photoURL,
+       post:post,  
+    }).then(()=>{
+        setPost("")
+    })
+
+  }
 
   useEffect(() => {
     onValue(ref(db, "users/"), (snapshot) => {
@@ -37,7 +50,7 @@ const Home = () => {
       setBiodata(arr);
     });
   }, []);
-
+ 
   return (
     <>
       <section className="bg-gray-950 min-h-screen relative">
@@ -80,12 +93,13 @@ const Home = () => {
               <FaPencil />
               Add bio
             </p>
-          <div className="mt-10">
+          <div className="mt-12">
             <p className="text-white text-xl font-bold mb-6">Create Post</p>
             <div className="">
                 
-            <textarea className="resize-none outline-none border-none rounded-md text-xl text-gray-100 bg-gray-900 p-5 font-semibold" cols="80" rows="5"></textarea>
-            <p className="text-white text-xl font-bold py-2 px-4 rounded-md bg-gray-900 w-[80px] text-center cursor-pointer active:scale-[0.98]">Post</p>
+            <textarea onChange={(e)=>setPost(e.target.value)}
+            value={post} className="resize-none outline-none border-none rounded-md text-xl text-gray-100 bg-gray-900 p-5 font-semibold" placeholder="Whats on your mind" cols="80" rows="5"></textarea>
+            <p onClick={handlePost} className="text-white text-xl font-bold py-2 px-4 rounded-md bg-gray-900 w-[80px] text-center cursor-pointer active:scale-[0.98]">Post</p>
             </div>
             
           </div>
@@ -95,18 +109,21 @@ const Home = () => {
           <div className="w-[500px] h-[300px] bg-gray-800 absolute top-[40%] left-[50%] p-5">
             <input
               onChange={(e) => setOccupation(e.target.value)}
+              value={occupation}
               className="w-full py-2 ps-4 mt-5 rounded-md text-xl font-semibold border-none outline-none "
               placeholder="Occupation"
               type="text"
             />
             <input
               onChange={(e) => setHometown(e.target.value)}
+              value={hometown}
               className="w-full py-2 ps-4 mt-5 rounded-md text-xl font-semibold border-none outline-none "
               placeholder="Home Town"
               type="text"
             />
             <input
               onChange={(e) => setCurrentcity(e.target.value)}
+              value={currentcity}
               className="w-full py-2 ps-4 mt-5 rounded-md text-xl font-semibold border-none outline-none "
               placeholder="Current City"
               type="text"
