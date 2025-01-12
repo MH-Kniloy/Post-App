@@ -14,6 +14,7 @@ const Home = () => {
   const [biodata, setBiodata] = useState([]);
   const [post, setPost]=useState("")
   const [postData, setPostData]=useState([])
+  const date = new Date()
   const handleSubmit = () => {
     set(ref(db, "biodata/" + data.uid), {
       occupation: occupation,
@@ -32,7 +33,9 @@ const Home = () => {
        postedByEmail:auth.currentUser.email,
        postedByName:auth.currentUser.displayName,
        postedByPhoto:auth.currentUser.photoURL,
-       post:post,  
+       post:post,
+       postDate:date.toDateString(),
+       postTime:date.toLocaleTimeString(),  
     }).then(()=>{
         setPost("")
     })
@@ -134,14 +137,25 @@ const Home = () => {
                   <div className="mt-10 w-[940px] bg-gray-900 rounded-md p-5">
                     <div className="flex items-center gap-3 mb-5">
                       <img
-                        className="w-[30px] h-[30px] rounded-full"
+                        className="w-[50px] h-[50px] rounded-full"
                         src={item.postedByPhoto}
                         alt=""
                       />
-                      <p className="text-white font-bold ">
-                        {item.postedByName}
-                      </p>
+                      <div className="flex justify-between w-full ">
+                        <div>
+                          <p className="text-white font-bold ">
+                            {item.postedByName}
+                          </p>
+                          <p className="text-gray-500 font-semibold ">
+                            {item.postDate}
+                          </p>
+                        </div>
+                        <p className="text-gray-500 font-semibold ">
+                          {item.postTime}
+                        </p>
+                      </div>
                     </div>
+
                     <div className="overflow-auto w-full max-h-[170px]">
                       <p className="text-white font-medium ">{item.post}</p>
                     </div>
